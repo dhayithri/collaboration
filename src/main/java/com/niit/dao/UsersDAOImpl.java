@@ -1,0 +1,51 @@
+package com.niit.dao;
+
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.niit.model.User;
+
+
+
+@SuppressWarnings("deprecation")
+@Repository
+public class UsersDAOImpl implements UsersDAO {
+
+	@Autowired
+	private SessionFactory sessionFactory;
+
+	/* Used for creating or updating user */
+	@Transactional
+	public void saveOrUpdate(User users) {
+		sessionFactory.getCurrentSession().saveOrUpdate(users);
+	}
+
+	/* Used for deleting user */
+	@Transactional
+	public void delete(User users) {
+		sessionFactory.getCurrentSession().delete(users);
+	}
+
+	/* Used to retrieve single user based on username */
+	@Transactional
+	public User getUser(String username) {
+		Criteria c=sessionFactory.getCurrentSession().createCriteria(User.class);
+		c.add(Restrictions.eq("username", username));
+		User user=(User)c.uniqueResult();
+		return user;
+	}
+
+	@Transactional
+	public User viewUser(int userid) {
+		Criteria c=sessionFactory.getCurrentSession().createCriteria(User.class);
+		c.add(Restrictions.eq("userid", userid));
+		User blog=(User) c.uniqueResult();
+		return blog;
+		
+	}
+
+}
